@@ -15,5 +15,5 @@ public interface ApArticleMapper extends BaseMapper<ApArticle> {
      * @param dto
      * @return
      */
-    List<ApArticle> loadArticleList(@Param("dto") ArticleHomeDto dto);
+    public List<ApArticle> loadArticleList(@Param("dto") ArticleHomeDto dto, @Param("type") Short type);
 }

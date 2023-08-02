@@ -11,5 +11,5 @@ public interface ArticleHomeService extends IService<ApArticle> {
      * @param dto
      * @return
      */
-    ResponseResult load(ArticleHomeDto dto);
+    ResponseResult load(ArticleHomeDto dto, Short loadtype);
 }

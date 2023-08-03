@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/vi/login")
 public class ApUserLoginController {
 
+    //认证token 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
+
     @Autowired
     private ApUserService apUserService;
 

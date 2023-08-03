@@ -1,8 +1,8 @@
 server:
-  port: 51802
+  port: 51602
 spring:
   application:
-    name: leadnews-article
+    name: leadnews-wemedia-gateway
   cloud:
     nacos:
       discovery:

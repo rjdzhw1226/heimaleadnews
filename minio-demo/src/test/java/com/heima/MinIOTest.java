@@ -31,12 +31,12 @@ public class MinIOTest {
         FileInputStream fileInputStream = null;
         try {
 
-            fileInputStream =  new FileInputStream("D:\\BaiduNetdiskDownload\\plugins\\js\\index.js");
+            fileInputStream =  new FileInputStream("F:\\BaiduNetdiskDownload\\plugins\\js\\index.js");
 
             //1.创建minio链接客户端
             MinioClient minioClient = MinioClient.builder()
                     .credentials("minio", "minio123")
-                    .endpoint("http://192.168.88.130:9000").build();
+                    .endpoint("http://192.168.179.200:9000").build();
             //2.上传
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                     .object("plugins/js/index.js")//文件名

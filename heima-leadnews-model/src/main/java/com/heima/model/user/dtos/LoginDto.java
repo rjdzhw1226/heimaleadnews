@@ -1,4 +1,4 @@
-package com.heima.model.dtos;
+package com.heima.model.user.dtos;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

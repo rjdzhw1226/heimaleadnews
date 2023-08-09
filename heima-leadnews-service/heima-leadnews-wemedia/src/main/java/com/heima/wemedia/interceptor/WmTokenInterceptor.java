@@ -2,6 +2,7 @@ package com.heima.wemedia.interceptor;
 
 import com.heima.model.wemedia.pojos.WmUser;
 import com.heima.utils.thread.WmThreadLocalUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 拦截器
  */
+@Slf4j
 public class WmTokenInterceptor implements HandlerInterceptor {
     /**
      * 前置处理 拿header的用户信息 存入ThreadLocal
@@ -28,6 +30,7 @@ public class WmTokenInterceptor implements HandlerInterceptor {
             wmUser.setId(Integer.valueOf(userId));
             //存入线程
             WmThreadLocalUtil.setUser(wmUser);
+            log.info("wmTokenFilter设置用户信息到threadlocal中...");
         }
         return true;
     }
@@ -42,6 +45,7 @@ public class WmTokenInterceptor implements HandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        log.info("清理threadlocal...");
         WmThreadLocalUtil.clearUser();
     }
 }

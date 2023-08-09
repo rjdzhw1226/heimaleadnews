@@ -16,6 +16,7 @@ public class ApUserLoginController {
 
     //认证token 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
     //认证token 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
+    //认证token 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
 
     @Autowired
     private ApUserService apUserService;

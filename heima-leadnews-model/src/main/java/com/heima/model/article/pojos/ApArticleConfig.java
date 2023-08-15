@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -13,8 +14,17 @@ import java.io.Serializable;
  */
 
 @Data
+@NoArgsConstructor
 @TableName("ap_article_config")
 public class ApArticleConfig implements Serializable {
+
+    public ApArticleConfig(long articleId){
+        this.articleId = articleId;
+        this.isDelete = false;
+        this.isDown = false;
+        this.isForward = true;
+        this.isComment = true;
+    }
 
     @TableId(value = "id",type = IdType.ID_WORKER)
     private Long id;

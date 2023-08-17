@@ -18,6 +18,8 @@
         <module>heima-leadnews-gateway</module>
         <module>heima-leadnews-test</module>
         <module>minio-demo</module>
+        <module>tess4j-demo</module>
+        <module>heima-leadnews-seata</module>
     </modules>
 
     <!-- 继承Spring boot工程 -->

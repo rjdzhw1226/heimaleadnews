@@ -12,3 +12,6 @@ spring:
         server-addr: 192.168.179.200:8848
         #server-addr: 192.168.88.130:8848
         file-extension: yml
+    alibaba:
+      seata:
+        tx-service-group: ${spring.application.name}_tx_group

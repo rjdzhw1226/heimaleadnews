@@ -1,0 +1,18 @@
+server:
+  port: 51701
+spring:
+  application:
+    name: leadnews-schedule
+  profiles:
+    ip: 192.168.179.200
+  redis:
+    host: ${spring.profiles.ip}
+    password: 123321
+    port: 6379
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${spring.profiles.ip}:8848
+      config:
+        server-addr: ${spring.profiles.ip}:8848
+        file-extension: yml

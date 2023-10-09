@@ -22,6 +22,7 @@ import com.heima.wemedia.mapper.WmNewsMapper;
 import com.heima.wemedia.mapper.WmNewsMaterialMapper;
 import com.heima.wemedia.service.WmNewsAutoScanService;
 import com.heima.wemedia.service.WmNewsService;
+import com.heima.wemedia.service.WmNewsTaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -48,6 +49,9 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
 
     @Autowired
     private WmNewsAutoScanService wmNewsAutoScanService;
+
+    @Autowired
+    private WmNewsTaskService wmNewsTaskService;
 
     /**
      * 条件查询文章列表
@@ -95,10 +99,10 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
     }
 
     /**
-     * 发布修改文章或保存为草稿
+     * 发布修改文章或保存为草稿(old)
      * @param dto
      * @return
-     */
+     *//*
     @Override
     public ResponseResult submitNews(WmNewsDto dto) {
         //参数判断
@@ -134,8 +138,60 @@ public class WmNewsServiceImpl extends ServiceImpl<WmNewsMapper, WmNews> impleme
         wmNewsAutoScanService.autoScanWmNews(wmNews.getId());
         //返回
         return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
-    }
+    }*/
 
+    /**
+     * 发布修改文章或保存为草稿（new）
+     * @param dto
+     * @return
+     */
+    @Override
+    public ResponseResult submitNews(WmNewsDto dto) {
+
+        //0.条件判断
+        if(dto == null || dto.getContent() == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+        }
+
+        //1.保存或修改文章
+
+        WmNews wmNews = new WmNews();
+        //属性拷贝 属性名词和类型相同才能拷贝
+        BeanUtils.copyProperties(dto,wmNews);
+        //封面图片  list---> string
+        if(dto.getImages() != null && dto.getImages().size() > 0){
+            //[1dddfsd.jpg,sdlfjldk.jpg]-->   1dddfsd.jpg,sdlfjldk.jpg
+            String imageStr = StringUtils.join(dto.getImages(), ",");
+            wmNews.setImages(imageStr);
+        }
+        //如果当前封面类型为自动 -1
+        if(dto.getType().equals(WemediaConstants.WM_NEWS_TYPE_AUTO)){
+            wmNews.setType(null);
+        }
+
+        saveOrUploadWmNews(wmNews);
+
+        //2.判断是否为草稿  如果为草稿结束当前方法
+        if(dto.getStatus().equals(WmNews.Status.NORMAL.getCode())){
+            return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+        }
+
+        //3.不是草稿，保存文章内容图片与素材的关系
+        //获取到文章内容中的图片信息
+        List<String> materials =  ectractUrlInfo(dto.getContent());
+        saveRelativeInfoForContent(materials,wmNews.getId());
+
+        //4.不是草稿，保存文章封面图片与素材的关系，如果当前布局是自动，需要匹配封面图片
+        saveRelativeInfoForCover(dto,wmNews,materials);
+
+        //审核文章
+        //wmNewsAutoScanService.autoScanWmNews(wmNews.getId());
+        //使用延时任务发布文章
+        wmNewsTaskService.addNewsToTask(wmNews.getId(),wmNews.getPublishTime());
+
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+
+    }
     /**
      * 保存文章图片与素材的关系到数据库中
      * @param materials

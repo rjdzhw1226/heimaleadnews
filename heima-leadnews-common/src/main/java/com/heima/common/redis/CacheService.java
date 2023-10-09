@@ -3,14 +3,10 @@ package com.heima.common.redis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.connection.DataType;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.StringRedisConnection;
-import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.ScanOptions;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.connection.*;
+import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
+import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -1436,6 +1432,36 @@ public class CacheService extends CachingConfigurerSupport {
             }
         });
         return objects;
+    }
+
+    /**
+     * 加锁
+     *
+     * @param name
+     * @param expire
+     * @return
+     */
+    public String tryLock(String name, long expire) {
+        name = name + "_lock";
+        String token = UUID.randomUUID().toString();
+        RedisConnectionFactory factory = stringRedisTemplate.getConnectionFactory();
+        RedisConnection conn = factory.getConnection();
+        try {
+
+            //参考redis命令：
+            //set key value [EX seconds] [PX milliseconds] [NX|XX]
+            Boolean result = conn.set(
+                    name.getBytes(),
+                    token.getBytes(),
+                    Expiration.from(expire, TimeUnit.MILLISECONDS),
+                    RedisStringCommands.SetOption.SET_IF_ABSENT //NX
+            );
+            if (result != null && result)
+                return token;
+        } finally {
+            RedisConnectionUtils.releaseConnection(conn, factory,false);
+        }
+        return null;
     }
 
 }

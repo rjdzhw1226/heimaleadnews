@@ -20,6 +20,7 @@
         <module>minio-demo</module>
         <module>tess4j-demo</module>
         <module>heima-leadnews-seata</module>
+        <module>kafka-demo</module>
     </modules>
 
     <!-- 继承Spring boot工程 -->

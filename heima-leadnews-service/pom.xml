@@ -16,6 +16,7 @@
         <module>heima-leadnews-article</module>
         <module>heima-leadnews-wemedia</module>
         <module>heima-leadnews-schedule</module>
+        <module>heima-leadnews-search</module>
     </modules>
 
     <properties>
@@ -59,6 +60,21 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>7.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-client</artifactId>
+            <version>7.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>7.4.0</version>
         </dependency>
     </dependencies>
 
